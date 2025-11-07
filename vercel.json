@@ -3,7 +3,6 @@
   "outputDirectory": "docs",
   "framework": "vue",
   "installCommand": "npm install",
-  "functions": {},
   "rewrites": [
     {
       "source": "/(.*)",
