@@ -14,11 +14,11 @@ export class AlgorandJSONAPI {
   }
 
   public static async getTransactionsForAccountID(accountID: string, network: any) {
-    const requestURL = `https://${network.domain}/idx2/v2/accounts/${accountID}/transactions?limit=${this.defaultLimit}`;
+    const requestURL = `https://${network.domain}/v2/accounts/${accountID}/transactions?limit=${this.defaultLimit}`;
 
     const response = await fetch(requestURL, {
       method: "GET",
-      headers: { accept: "application/json", "x-api-key": AlgorandJSONAPI.prototypeName()},
+      headers: { accept: "application/json" },
     });
 
     const jsonData = await response.json();
@@ -28,11 +28,11 @@ export class AlgorandJSONAPI {
 
 
   public static async getTransactionsForAssetID(assetID: string, network: any) {
-    const requestURL = `https://${network.domain}/idx2/v2/assets/${assetID}/transactions?limit=${this.defaultLimit}`;
+    const requestURL = `https://${network.domain}/v2/assets/${assetID}/transactions?limit=${this.defaultLimit}`;
 
     const response = await fetch(requestURL, {
       method: "GET",
-      headers: { accept: "application/json", "x-api-key": AlgorandJSONAPI.prototypeName()},
+      headers: { accept: "application/json" },
     });
 
     const jsonData = await response.json();

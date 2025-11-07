@@ -22,7 +22,7 @@
 
               <p>
                 <v-btn class="cta"
-                       href="?deeplink=true&network=main&accountid=YHFIMNQB2HSDWPH3LKMGZK7TTSVWPS44RBLKFBO5JAUD52EXPGTQGICWZY&focus=graph&layout=concentric"
+                       href="?deeplink=true&network=main&accountid=37VPAD3CK7CDHRE4U3J75IE4HLFN5ZWVKJ52YFNBX753NNDN6PUP2N7YKI&focus=graph&layout=concentric"
                        color="primary"
                        elevation="5"
                 >
@@ -61,69 +61,12 @@
         </v-col>
       </v-row>
     </section>
-    <section fluid class="contact">
-      <v-row class="landingpage">
-        <v-col cols="md-2">
-        </v-col>
-        <v-col cols="md-8">
-          <h1 class="">Got questions? Let's talk.</h1>
-          <p>
-            <img src="https://raw.githubusercontent.com/akaalias/algorand-ballet/main/public/img/alexis-portrait.jpg"
-                 class="portrait" />
-          </p>
-          <p>
-            Oh, hi there!
-          </p>
-          <p>
-            Alexis here, great to meet you.
-          </p>
-
-          <p>
-            If you want to learn more about Ballet, how to integrate qualitative analysis into your existing auditing
-            and diligence workflow, or just chat in general: I want to hear from you!
-          </p>
-          <p>
-            I've found <em>the best way by far</em> is to talk personally so I've opened up office hours this week.
-          </p>
-          <p>
-            Click on the button below and book a time right away.
-          </p>
-          <p>
-            <v-btn class="cta"
-                   href="https://calendly.com/alexis-rondeau"
-                   color="primary"
-                   elevation="5"
-            >
-              Let's talk about your questions!
-            </v-btn>
-          </p>
-        </v-col>
-        <v-col cols="md-2">
-        </v-col>
-      </v-row>
-    </section>
-    <section class="pudding">
-      <h2 class="headline">
-        <b>New!</b> Pudding Research – Qualitative Analysis for <u>Ethereum Token Ecosystems</u>
-      </h2>
-
-      <a href="https://alexisrondeau.me/pudding/" target="_blank">
-        <img class="pudding-demo" src="https://raw.githubusercontent.com/akaalias/algorand-ballet/main/public/gallery/pudding.png"/>
-        <br>
-        <br>
-        <br>
-        <p>
-          <v-btn large light color="primary">
-            Visit Pudding Research
-          </v-btn>
-        </p>
-      </a>
-    </section>
     <footer>
       <p>
-        Copyright 2022 –
+        Copyright 2025 –
         Made with love by <a href="https://alexisrondeau.me" target="_blank">Alexis Rondeau</a> –
-        <a href="https://github.com/akaalias/algorand-ballet" target="_blank">Open Source on Github</a>
+        <a href="https://github.com/akaalias/algorand-ballet" target="_blank">Open Source on Github</a> -
+        Relaunched by <a href="https://igetalgo.com" target="_blank">iGetAlgo</a>
       </p>
     </footer>
   </div>
@@ -245,27 +188,7 @@ img {
   width: 100%;
 }
 
-.pudding-demo {
-  width: 80%;
-  border-radius: 20px;
-  box-shadow: 0px 0px 300px #c22fff;
-  border: 2px solid #c22fff;
-  padding: 10px;
-  background-color: #333;
-}
 
-.pudding {
-  border-radius: 5px;
-  background-color: #420f57;
-  padding: 20px;
-  padding-bottom: 50px;
-  text-align: center;
-}
-
-.pudding .headline {
-  color: white;
-  padding: 50px;
-}
 
 #new-banner {
   background-color: #d0542b;
@@ -277,12 +200,5 @@ img {
   left: 0px;
 }
 
-.contact h1 {
-  font-size: 24pt !important;
-}
 
-.contact {
-  background-color: #6b2d18;
-
-}
 </style>

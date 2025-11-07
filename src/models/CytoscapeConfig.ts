@@ -42,6 +42,14 @@ export class CytoscapeConfig {
         },
       },
       {
+        selector: "node.nfd-node",
+        style: {
+          color: "#00ff66",
+          "text-outline-color": "#003d1a",
+          "text-outline-width": "2px",
+        },
+      },
+      {
         selector: "node.application",
         style: {
           width: "120",

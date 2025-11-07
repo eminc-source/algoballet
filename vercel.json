@@ -1,0 +1,13 @@
+{
+  "buildCommand": "export NODE_OPTIONS=--openssl-legacy-provider && npm run build",
+  "outputDirectory": "docs",
+  "framework": "vue",
+  "installCommand": "npm install",
+  "functions": {},
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

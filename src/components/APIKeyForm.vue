@@ -8,20 +8,19 @@
           Please configure your API Key
         </h1>
         <p>
-          Hi there! To use the explorer you need access to Algorand's data via
-          an API key.
+          Hi there! This application now uses Nodely's free Algorand API service,
+          so no API key is required for basic functionality.
         </p>
 
         <p>
-          I've gotten mine from Purestake: It works really well, it's free for
-          personal use and was easy to get via their
-          <a href="https://developer.purestake.io/">Developer Portal</a>. (I
-          have no affiliation with Purestake)
+          We've switched to <a href="https://nodely.io/">Nodely</a>: It works really well, 
+          it's free for public use and provides reliable access to Algorand blockchain data. 
+          (I have no affiliation with Nodely)
         </p>
 
         <p>
-          After signing up, please copy and paste your key below. It will be
-          stored locally for the duration of your session.
+          If you have an API key for enhanced features, you can enter it below. 
+          It will be stored locally for the duration of your session.
         </p>
 
         <br />

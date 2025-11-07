@@ -131,6 +131,36 @@
             </v-list-item>
           </v-list-item-group>
 
+          <v-subheader>FOCUS</v-subheader>
+          <v-list-item-group>
+            <v-list-item>
+              <v-switch
+                v-model="focusMode"
+                label="Focus Mode"
+                @change="toggleFocusMode"
+                dense
+              ></v-switch>
+            </v-list-item>
+
+            <v-list-item v-if="focusMode">
+              <v-btn
+                v-on:click="clearFocus"
+                block
+                small
+              > Clear Focus
+              </v-btn>
+            </v-list-item>
+
+            <v-list-item>
+              <v-switch
+                v-model="nfdOnlyMode"
+                label="NFD Only"
+                @change="toggleNFDOnlyMode"
+                dense
+              ></v-switch>
+            </v-list-item>
+          </v-list-item-group>
+
           <v-subheader>DISTRIBUTE</v-subheader>
           <v-list-item-group>
             <v-list-item class="exportPNG">
@@ -157,6 +187,7 @@
       fullscreen
       hide-overlay
       transition="dialog-bottom-transition"
+      @keydown.esc="closeDialog"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -181,7 +212,7 @@
           <v-btn
             icon
             dark
-            @click="dialog = false"
+            @click="closeDialog"
           >
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -202,33 +233,6 @@
               <v-col cols="3">
               </v-col>
               <v-col cols="6">
-                <h1 class="heading">Oh, hi there!</h1>
-                <p>
-                  Great to meet you.
-                  My name is <a href="https://alexisrondeau.me" target="_blank">Alexis Rondeau</a>.
-                  </p>
-                <p>
-                  I am a
-                  researcher, product manager, developer and Algorand enthusiast. I wanted to share a research project
-                  I've been working on with you.
-                </p>
-
-                <p>
-                  I built Ballet after going on an actual adventure and wanting to spend a few Algos on NFTs, <b>I felt deeply unsettled how much overt
-                  scamming and how little transparency there was</b>.
-                </p>
-                <p>
-                  In short, I did NOT FEEL SAFE while trying to buy a single NFT
-                  for fun because I had no way of understanding WHO the person (or group) behind the artwork really is.
-                  And I had no way to verify if the story they're telling me is actually true. And I had no
-                  way to know the people running the "gallery" itself.
-                </p>
-
-                <p>
-                  To me, it felt like the Middle Ages.
-                </p>
-
-
                 <h2>
                   Qualitative Blockchain Analysis
                 </h2>
@@ -322,7 +326,7 @@
                 <p>
                   I also believe it's using "qualitative AND quantitative" methods equally to have your "eyes on the
                   sidewalk" and "your ears to the ground". That's why you can click-hold on any Account, Asset,
-                  Application, Group and Transaction inside Ballet to open its information on AlgoExplorer in a new
+                  Application, Group and Transaction inside Ballet to open its information on Pera Explorer in a new
                   window.
                 </p>
 
@@ -344,17 +348,6 @@
                   </em>
                 </p>
 
-                <h2>Questions?</h2>
-                <p>
-                  Let's talk
-                  If you have questions the best way to reach me is to talk in person:
-
-                  In person, let's get a coffee and take a walk!
-                  or via video/audio call on Zoom
-                  To make that easy, <a href="https://calendly.com/alexis-rondeau" target="_blank">here's my Calendly
-                  where you can book a time for us to talk</a>.
-                </p>
-
               </v-col>
 
               <v-col cols="3">
@@ -368,20 +361,22 @@
               <v-col cols="6">
                 <h1 class="heading">Many thanks go out to</h1>
 
-                <h2>PureStake</h2>
+                <h2>Nodely</h2>
                 <p>
-                  PureStake have enabled me to iterate incredibly fast by <a
-                  href="https://www.purestake.com/technology/algorand-api/">providing their API to the Algorand
+                  Nodely have enabled me to iterate incredibly fast by <a
+                  href="https://nodely.io/">providing their free API to the Algorand
                   blockchain</a>.
-                  It's been a bliss to work with it and I couldn't have done it without them. And I would immediately
-                  use their API again for any new project and recommend you try it out as well.
-                  (Please note that I am not affiliated with PureStake.)
+                  It's been a bliss to work with it and I couldn't have done it without them. Their free indexer 
+                  service has made this project possible and I would immediately use their API again for any 
+                  new project and recommend you try it out as well.
+                  (Please note that I am not affiliated with Nodely.)
                 </p>
 
-                <h2>Algorand Foundation</h2>
+                <h2>Alexis Rondeau</h2>
                 <p>
-                  Thank you <a href="https://algorand.foundation/about-us/who-we-are">Addie at the Algorand
-                  Foundation</a> for your review and positive feedback!
+                  Thank you <a href="https://github.com/akaalias">Alexis Rondeau</a> for creating this amazing 
+                  software and open sourcing it for the community! Your innovative work on qualitative blockchain 
+                  analysis has made this enhanced version possible.
                 </p>
               </v-col>
             </v-row>
@@ -405,9 +400,9 @@
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>View details on AlgoExplorer</v-list-item-title>
+                  <v-list-item-title>View details on Pera Explorer</v-list-item-title>
                   <v-list-item-subtitle>
-                    View details on AlgoExplorer on any Account, Asset, Application, any Group and any Transaction by
+                    View details on Pera Explorer on any Account, Asset, Application, any Group and any Transaction by
                     click-holding.
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -426,6 +421,22 @@
                   <v-list-item-subtitle>
                     For fast and animated switching between layouts use your arrow-up and arrow-down keys after
                     selecting a new layout with your mouse.
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>Focus Mode</v-list-item-title>
+                  <v-list-item-subtitle>
+                    Enable Focus Mode in the left menu to highlight specific wallets. Click on nodes to focus on them (they stay bright while others become semi-transparent). Click focused nodes again to unfocus them. Use "Clear Focus" to reset all nodes to full visibility.
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>NFD Only Mode</v-list-item-title>
+                  <v-list-item-subtitle>
+                    Enable NFD Only Mode to show only wallets with NFD names (bright green text). All other wallets become very faint, making it easy to spot and analyze relationships between named accounts.
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -468,17 +479,16 @@
 import { CytoscapeConfig } from "@/models/CytoscapeConfig";
 import { EndpointDomains } from "@/models/EndpointDomains";
 import { QualitativeResearchApproach } from "@/models/QualitativeResearchApproach";
-import APIKeyForm from "@/components/APIKeyForm";
 import SearchForm from "@/components/SearchForm";
 import Landingpage from "@/components/Landingpage"
 import { CacheManager } from "@/models/CacheManager";
+import { NFDService } from "@/models/NFDService";
 import cola from "cytoscape-cola";
 
 export default {
   name: "MainResearchView",
   data: () => ({
     accountID: "",
-    apiKey: EndpointDomains.key,
     selectedNetwork: EndpointDomains.defaultNetwork,
     focuses: QualitativeResearchApproach.researchApproaches,
     selectedFocus: QualitativeResearchApproach.defaultResearchApproach,
@@ -505,7 +515,10 @@ export default {
     miniHelp: true,
     shareButtonLabel: "Share URL",
     graphHeight: 750,
-    dialog: false
+    dialog: false,
+    focusMode: false,
+    focusedNodes: new Set(),
+    nfdOnlyMode: false
   }),
   methods: {
     async setElementsFromCache() {
@@ -525,6 +538,12 @@ export default {
     async afterCreated(cy) {
       this.cy = cy;
       this.cy.add(this.elements);
+      
+      // Small delay to ensure nodes are rendered before enhancing with NFD
+      setTimeout(async () => {
+        await this.enhanceNodesWithNFD();
+      }, 500);
+      
       this.cy.on(
         "doubleTap",
         "node",
@@ -537,7 +556,7 @@ export default {
         }.bind(this)
       );
 
-      // handle double click node info on algoexplorer
+      // handle double click node info on pera explorer
       this.cy.on(
         "tap",
         "node",
@@ -546,6 +565,9 @@ export default {
           const msFromLastTap = currentTapStamp - this.previousTapStamp;
           if (msFromLastTap < this.doubleClickDelayMs) {
             evt.target.trigger("doubleTap", evt);
+          } else if (this.focusMode) {
+            // Single tap in focus mode - toggle focus on this node
+            this.focusOnNode(evt.target);
           }
           this.previousTapStamp = currentTapStamp;
         }.bind(this)
@@ -561,19 +583,19 @@ export default {
           const type = node.data().type;
           // Account Node
           if (type === "account-node") {
-            url = url + "/address/" + node.data().id;
+            url = url + "/address/" + node.data().id + "/";
           } else if (type === "application-node") {
-            url = url + "/application/" + node.data().id;
+            url = url + "/application/" + node.data().id + "/";
           } else if (type === "asset-node") {
-            url = url + "/asset/" + node.data().id;
+            url = url + "/asset/" + node.data().id + "/";
           } else if (
             type === "payment-transaction-node" ||
             type === "asset-transfer-transaction-node" ||
             type === "application-transaction-node"
           ) {
-            url = url + "/tx/" + node.data().id;
+            url = url + "/tx/" + node.data().id + "/";
           } else if (type === "group-node") {
-            url = url + "/tx/group/" + encodeURI(node.data().id);
+            url = url + "/tx/group/" + encodeURI(node.data().id) + "/";
           } else {
             console.log("Unsure how to handle this node");
           }
@@ -669,8 +691,61 @@ export default {
         this.cy.$(".asset, .asset-transfer-transaction, .asset-relationship").style("display", "element");
       }
     },
-    setMyAPIKey(key) {
-      this.apiKey = key;
+    async enhanceNodesWithNFD() {
+      if (!this.cy) return;
+      
+      // Get all account nodes (excluding asset and application nodes)
+      const accountNodes = this.cy.nodes('[type="account-node"]');
+      
+      // Also try to get all nodes that look like accounts (as fallback)
+      const allAccountLikeNodes = this.cy.nodes().filter(node => {
+        const id = node.data('id');
+        return NFDService.isAlgorandAddress(id);
+      });
+      
+      // Use the account nodes if found, otherwise fallback to address-like nodes
+      const nodesToProcess = accountNodes.length > 0 ? accountNodes : allAccountLikeNodes;
+      
+      if (nodesToProcess.length === 0) return;
+      
+      // Extract addresses from nodes
+      const addresses = [];
+      nodesToProcess.forEach(node => {
+        const nodeId = node.data('id');
+        if (NFDService.isAlgorandAddress(nodeId)) {
+          addresses.push(nodeId);
+        }
+      });
+      
+      if (addresses.length === 0) return;
+      
+      try {
+        // Batch lookup actual NFD names (no fallbacks)
+        const nfdNames = await NFDService.batchGetNFDNames(addresses);
+        
+        let updatedCount = 0;
+        
+        // Update node labels with NFD names when available
+        nodesToProcess.forEach(node => {
+          const nodeId = node.data('id');
+          const nfdName = nfdNames.get(nodeId);
+          
+          // Only update if we have an actual NFD name
+          if (nfdName) {
+            node.data('label', nfdName);
+            node.addClass('nfd-node');
+            updatedCount++;
+          }
+        });
+        
+        // Force a redraw of the graph if we updated any nodes
+        if (updatedCount > 0) {
+          this.cy.layout().run();
+        }
+        
+      } catch (error) {
+        console.error('Error enhancing nodes with NFD:', error);
+      }
     },
     setupFromURLParams() {
       const focusParam = this.$route.query.focus;
@@ -700,6 +775,14 @@ export default {
     },
     popupDialog(event) {
       this.dialog = true;
+    },
+    closeDialog(event) {
+      console.log('Closing dialog...');
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      this.dialog = false;
     },
     toggleTransactionGroups() {
       if (!this.transactionGroupsVisible) {
@@ -747,6 +830,102 @@ export default {
 
       return deeplinkString;
     },
+    toggleFocusMode() {
+      if (!this.focusMode) {
+        // Exiting focus mode - restore all nodes to full opacity
+        this.clearFocus();
+      } else if (this.nfdOnlyMode) {
+        // If NFD mode is active, disable it when entering focus mode
+        this.nfdOnlyMode = false;
+      }
+    },
+    clearFocus() {
+      this.focusedNodes.clear();
+      if (this.cy) {
+        this.cy.nodes().style('opacity', 1);
+        this.cy.edges().style('opacity', 1);
+        
+        // If NFD only mode is still active, reapply it
+        if (this.nfdOnlyMode) {
+          this.toggleNFDOnlyMode();
+        }
+      }
+    },
+    focusOnNode(node) {
+      if (!this.focusMode) return;
+      
+      const nodeId = node.id();
+      
+      if (this.focusedNodes.has(nodeId)) {
+        // Node already focused, unfocus it
+        this.focusedNodes.delete(nodeId);
+      } else {
+        // Add node to focused set
+        this.focusedNodes.add(nodeId);
+      }
+      
+      this.updateFocusVisibility();
+    },
+    toggleNFDOnlyMode() {
+      if (!this.cy) return;
+      
+      if (this.nfdOnlyMode) {
+        // Enable NFD only mode - hide non-NFD nodes
+        this.cy.nodes().forEach(node => {
+          if (node.hasClass('nfd-node')) {
+            node.style('opacity', 1);
+            // Also show connected edges at reduced opacity
+            node.connectedEdges().style('opacity', 0.6);
+          } else {
+            node.style('opacity', 0.1);
+          }
+        });
+        
+        // Hide edges between non-NFD nodes
+        this.cy.edges().forEach(edge => {
+          const sourceIsNFD = edge.source().hasClass('nfd-node');
+          const targetIsNFD = edge.target().hasClass('nfd-node');
+          
+          if (!sourceIsNFD && !targetIsNFD) {
+            edge.style('opacity', 0.05);
+          }
+        });
+      } else {
+        // Disable NFD only mode - restore all nodes
+        this.cy.nodes().style('opacity', 1);
+        this.cy.edges().style('opacity', 1);
+      }
+    },
+    updateFocusVisibility() {
+      if (!this.cy) return;
+      
+      if (this.focusedNodes.size === 0) {
+        // No nodes focused, restore based on NFD mode
+        if (this.nfdOnlyMode) {
+          this.toggleNFDOnlyMode();
+        } else {
+          this.cy.nodes().style('opacity', 1);
+          this.cy.edges().style('opacity', 1);
+        }
+      } else {
+        // Fade all nodes first
+        this.cy.nodes().style('opacity', 0.2);
+        this.cy.edges().style('opacity', 0.2);
+        
+        // Highlight focused nodes and their connections
+        this.focusedNodes.forEach(nodeId => {
+          const node = this.cy.getElementById(nodeId);
+          node.style('opacity', 1);
+          
+          // Also highlight connected edges and their other endpoints
+          node.connectedEdges().forEach(edge => {
+            edge.style('opacity', 0.6);
+            edge.source().style('opacity', 0.8);
+            edge.target().style('opacity', 0.8);
+          });
+        });
+      }
+    },
     getSearchFormClass() {
       if (this.elements.length == 0 && this.searching != true) {
         return "homepageSearchFormClass elevation-21";
@@ -757,7 +936,6 @@ export default {
   },
   components: {
     SearchForm,
-    APIKeyForm,
     Landingpage
   }
 };
@@ -855,6 +1033,16 @@ export default {
   bottom: 20px;
   right: 20px;
   z-index: 10000;
+}
+
+/* Focus Mode Indicator */
+#graphMenuCard .v-input--switch {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+#graphMenuCard .v-input--switch .v-input__slot {
+  margin-bottom: 0;
 }
 
 </style>

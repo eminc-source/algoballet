@@ -1,5 +1,6 @@
 <template>
-  <v-form id="searchForm">
+  <div class="search-form-wrapper">
+    <v-form id="searchForm">
     <v-row  v-if="accountIDHistory.length >= 1">
       <v-col cols="1" class="pt-8">
         <div class="align-right"
@@ -25,11 +26,14 @@
         <v-text-field
           v-model="accountID"
           :rules="accountIDRules"
-          label="Enter an Algorand Account or Asset ID"
+          label="Enter Algorand Account, Asset ID, or NFD (e.g., algo.algo)"
           required
           single-line
           clearable
           class="top-z"
+          :loading="isResolvingNFD"
+          :hint="nfdHint"
+          persistent-hint
         ></v-text-field>
       </v-col>
 
@@ -49,7 +53,7 @@
              cols="2"
       >
         <v-btn
-          color="primary"
+          color="orange"
           elevation="2"
           v-on:click="searchReady"
           :disabled="isDisabled ? false : true"
@@ -58,39 +62,74 @@
         >
           <v-icon>mdi-search-web</v-icon>
 
-          {{ buttonText }}
+          Search
         </v-btn>
       </v-col>
     </v-row>
   </v-form>
+  </div>
 </template>
 
 <script>
 import { EndpointDomains } from "../models/EndpointDomains";
+import { NFDService } from "../models/NFDService";
 
 export default {
   name: "SearchForm",
   props: ["parentAccountID"],
   data:() => ({
     accountID: "",
+    isResolvingNFD: false,
+    nfdHint: "",
     accountIDRules: [
-      (v) => !!v || "AccountID or AssetID is required",
-      (v) => (v.length === 58 || v.length >= 6) || "Must be an account or asset ID",
+      (v) => !!v || "Account ID, Asset ID, or NFD is required",
+      (v) => (v.length === 58 || v.length >= 6 || NFDService.isNFDFormat(v)) || "Must be an account ID, asset ID, or NFD (e.g., algo.algo)",
     ],
     networks: EndpointDomains.apiNetworks,
     selectedNetwork: EndpointDomains.defaultNetwork,
-    buttonText: "Search",
     accountIDHistory: [],
     exampleDeepLinks: [ {
-                          walletID: "YHFIMNQB2HSDWPH3LKMGZK7TTSVWPS44RBLKFBO5JAUD52EXPGTQGICWZY",
-                          url: "/algorand-ballet/?deeplink=true&network=main&accountid=YHFIMNQB2HSDWPH3LKMGZK7TTSVWPS44RBLKFBO5JAUD52EXPGTQGICWZY&focus=graph&layout=concentric"
+                          walletID: "37VPAD3CK7CDHRE4U3J75IE4HLFN5ZWVKJ52YFNBX753NNDN6PUP2N7YKI",
+                          url: "/algorand-ballet/?deeplink=true&network=main&accountid=37VPAD3CK7CDHRE4U3J75IE4HLFN5ZWVKJ52YFNBX753NNDN6PUP2N7YKI&focus=graph&layout=concentric"
                         }
                         ],
     currentDeepLink: {}
   }),
   methods: {
-    searchReady() {
-      this.notify();
+    async searchReady(isDeeplink = false) {
+      // Tokengating temporarily removed - search is open to all users
+      
+      let finalAccountID = this.accountID;
+      let originalNFD = null;
+      
+      // Check if input is an NFD and resolve it
+      if (NFDService.isNFDFormat(this.accountID)) {
+        originalNFD = this.accountID;
+        this.isResolvingNFD = true;
+        this.nfdHint = "Resolving NFD...";
+        
+        try {
+          const resolvedAddress = await NFDService.resolveNFD(this.accountID);
+          if (resolvedAddress) {
+            finalAccountID = resolvedAddress;
+            this.nfdHint = `Resolved to: ${resolvedAddress} (${originalNFD})`;
+          } else {
+            this.nfdHint = "NFD not found or could not be resolved";
+            this.isResolvingNFD = false;
+            return; // Don't proceed with search if NFD couldn't be resolved
+          }
+        } catch (error) {
+          this.nfdHint = "Error resolving NFD";
+          this.isResolvingNFD = false;
+          return;
+        }
+        
+        this.isResolvingNFD = false;
+      } else {
+        this.nfdHint = "";
+      }
+      
+      this.notify(finalAccountID);
     },
     goBack() {
       const topAccountID = this.accountIDHistory.pop();
@@ -98,8 +137,9 @@ export default {
       this.accountID = previousAccountID;
       this.notify();
     },
-    notify() {
-      this.$emit('searchReady', {accountID: this.accountID, network: this.selectedNetwork});
+    notify(resolvedAccountID = null) {
+      const accountToUse = resolvedAccountID || this.accountID;
+      this.$emit('searchReady', {accountID: accountToUse, network: this.selectedNetwork});
     },
     calculateColumnsForSearchButton() {
       if(accountIDHistory.length > 1) {
@@ -123,8 +163,8 @@ export default {
   },
   computed: {
     isDisabled() {
-      // evaluate whatever you need to determine disabled here...
-      return (this.accountID.length === 58 || this.accountID.length >= 6);
+      // Enable search for valid account IDs, asset IDs, or NFDs
+      return (this.accountID.length === 58 || this.accountID.length >= 6 || NFDService.isNFDFormat(this.accountID)) && !this.isResolvingNFD;
     }
   },
   mounted: function() {
@@ -139,7 +179,7 @@ export default {
     const accountIDParam = this.$route.query.accountid;
     if(!!accountIDParam && accountIDParam.length === 58) {
       this.accountID = accountIDParam;
-      this.searchReady();
+      this.searchReady(true); // Pass true to indicate this is a deeplink/URL parameter
     }
 
     this.currentDeepLink = this.getRandomDeepLink();

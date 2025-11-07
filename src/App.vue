@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <v-main>
+    <AppHeader v-if="showHeader" />
+    <v-main :class="{ 'with-header': showHeader }">
       <router-view/>
     </v-main>
   </v-app>
@@ -11,6 +12,7 @@ import Vue from 'vue';
 import VueCytoscape from 'vue-cytoscape'
 import Clipboard from 'v-clipboard'
 import VueMeta from 'vue-meta'
+import AppHeader from '@/components/AppHeader.vue'
 
 Vue.use(VueCytoscape)
 Vue.use(Clipboard)
@@ -18,6 +20,14 @@ Vue.use(VueMeta)
 
 export default Vue.extend({
   name: 'App',
+  components: {
+    AppHeader
+  },
+  computed: {
+    showHeader(): boolean {
+      return this.$route.name !== 'About';
+    }
+  },
   metaInfo: {
     title: 'Algorand Ballet – Background-Checks for Wallets and Assets',
     titleTemplate: '%s',
@@ -42,3 +52,9 @@ export default Vue.extend({
   }),
 });
 </script>
+
+<style>
+.v-main.with-header {
+  padding-top: 60px !important;
+}
+</style>

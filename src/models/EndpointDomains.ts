@@ -1,21 +1,23 @@
 export class EndpointDomains {
+  public static key = ""; // No longer needed with free indexer
+  
   public static apiNetworks = [
     {
       name: "MainNet",
-      domain: "mainnet-algorand.api.purestake.io",
-      algoExplorerDomain: "algoexplorer.io",
+      domain: "mainnet-idx.4160.nodely.dev",
+      algoExplorerDomain: "explorer.perawallet.app",
       key: "main"
     },
     {
       name: "TestNet",
-      domain: "testnet-algorand.api.purestake.io",
-      algoExplorerDomain: "testnet.algoexplorer.io",
+      domain: "testnet-idx.4160.nodely.dev",
+      algoExplorerDomain: "explorer.perawallet.app", 
       key: "test"
     },
     {
       name: "BetaNet",
-      domain: "betanet-algorand.api.purestake.io",
-      algoExplorerDomain: "betanet.algoexplorer.io",
+      domain: "betanet-idx.4160.nodely.dev",
+      algoExplorerDomain: "explorer.perawallet.app",
       key: "beta"
     },
   ];
