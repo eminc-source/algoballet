@@ -6,11 +6,17 @@
       v-if="searching"
       class="searchingProgressIndicator"
     ></v-progress-linear>
-    <Landingpage @popupDialog="popupDialog($event)" v-if="elements.length == 0 && searching != true"></Landingpage>
+    <Landingpage @popupDialog="popupDialog($event)" 
+                 @searchReady="startSearch($event)"
+                 @showInformationOverlay="popupDialog($event)"
+                 :parentAccountID="accountID"
+                 v-if="elements.length == 0 && searching != true">
+    </Landingpage>
     <SearchForm :parentAccountID="accountID"
                 @searchReady="startSearch($event)"
                 @showInformationOverlay="popupDialog($event)"
                 v-bind:class="getSearchFormClass()"
+                v-if="elements.length > 0"
     />
     <div class="cyHolder" v-if="elements.length > 0">
       <cytoscape
@@ -22,16 +28,18 @@
       <v-card id="graphMenuCard" tile v-if="elements.length !== 0">
         <v-btn
           icon
-          x-small
+          small
           @click.stop="mini = !mini"
           class="hideMenuButton"
+          color="#4CAF50"
+          elevation="2"
         >
-          <v-icon>mdi-chevron-down</v-icon>
+          <v-icon color="white">{{ mini ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
         </v-btn>
 
         <v-list id="menuList" v-if="mini">
-          <v-subheader>FOCUS</v-subheader>
-          <v-list-item-group color="primary">
+          <v-subheader>CONTROL PANEL</v-subheader>
+          <v-list-item-group color="#4CAF50">
             <v-list-item>
               <v-select
                 v-model="selectedFocus"
@@ -47,7 +55,7 @@
           </v-list-item-group>
 
           <v-subheader>LAYOUTS</v-subheader>
-          <v-list-item-group color="primary">
+          <v-list-item-group color="#4CAF50">
             <v-list-item>
               <v-select
                 v-model="selectedLayout"
@@ -171,13 +179,7 @@
               </v-btn>
             </v-list-item>
 
-            <v-list-item class="Share">
-              <v-btn
-                v-on:click="copyURLtoClipboard"
-                block
-              > {{ shareButtonLabel }}
-              </v-btn>
-            </v-list-item>
+
           </v-list-item-group>
         </v-list>
       </v-card>
@@ -207,7 +209,7 @@
       <v-card>
         <v-toolbar
           dark
-          color="primary"
+          color="#4CAF50"
         >
           <v-btn
             icon
@@ -222,7 +224,7 @@
           <v-spacer></v-spacer>
         </v-toolbar>
 
-        <v-tabs>
+        <v-tabs color="#4CAF50">
           <v-tab>About Algorand Ballet</v-tab>
           <v-tab>Thank you</v-tab>
           <v-tab>How To Navigate</v-tab>
@@ -513,7 +515,7 @@ export default {
     mini: true,
     searching: false,
     miniHelp: true,
-    shareButtonLabel: "Share URL",
+
     graphHeight: 750,
     dialog: false,
     focusMode: false,
@@ -526,9 +528,10 @@ export default {
       this.elements = [];
       this.elements = await this.cacheManager.get(this.selectedNetwork, this.accountID, this.selectedFocus);
     },
+
     async search() {
       this.searching = true;
-      this.shareButtonLabel = "Share URL";
+
       await this.setElementsFromCache();
       this.searching = false;
     },
@@ -813,11 +816,7 @@ export default {
         }
       );
     },
-    copyURLtoClipboard() {
-      const deeplink = this.assembleDeepLinkURL();
-      this.$clipboard(deeplink);
-      this.shareButtonLabel = "URL Copied";
-    },
+
     assembleDeepLinkURL() {
       var deeplinkString = "";
 
@@ -1014,9 +1013,19 @@ export default {
 
 .hideMenuButton {
   position: absolute;
-  right: 5px;
-  top: 5px;
-  max-height: 10px;
+  right: 8px;
+  top: 8px;
+  background-color: #4CAF50 !important;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.hideMenuButton:hover {
+  background-color: #66BB6A !important;
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
 .searchingProgressIndicator {
@@ -1043,6 +1052,16 @@ export default {
 
 #graphMenuCard .v-input--switch .v-input__slot {
   margin-bottom: 0;
+}
+
+/* Make all hyperlinks in the dialog red to match logo */
+.v-dialog a, .v-card a {
+  color: #D32F2F !important;
+  text-decoration: underline;
+}
+
+.v-dialog a:hover, .v-card a:hover {
+  color: #B71C1C !important;
 }
 
 </style>

@@ -55,6 +55,32 @@ export default Vue.extend({
 
 <style>
 .v-main.with-header {
-  padding-top: 60px !important;
+  padding-top: 100px !important;
+}
+
+#welcome-banner {
+  background-color: #4CAF50;
+  padding: 8px 16px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  position: static;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  #welcome-banner {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  #welcome-banner {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
 }
 </style>

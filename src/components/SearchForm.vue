@@ -1,7 +1,7 @@
 <template>
   <div class="search-form-wrapper">
     <v-form id="searchForm">
-    <v-row  v-if="accountIDHistory.length >= 1">
+    <v-row>
       <v-col cols="1" class="pt-8">
         <div class="align-right"
              v-if="accountIDHistory.length < 1"
@@ -22,7 +22,7 @@
           </v-icon>
         </v-btn>
       </v-col>
-      <v-col cols="7">
+      <v-col cols="9">
         <v-text-field
           v-model="accountID"
           :rules="accountIDRules"
@@ -36,24 +36,11 @@
           persistent-hint
         ></v-text-field>
       </v-col>
-
-      <v-col cols="2">
-        <v-select
-          v-model="selectedNetwork"
-          item-text="name"
-          item-value="domain"
-          :items="networks"
-          label="Network"
-          single-line
-          return-object
-          class="top-z"
-        ></v-select>
-      </v-col>
       <v-col class="pt-7"
              cols="2"
       >
         <v-btn
-          color="orange"
+          color="#4CAF50"
           elevation="2"
           v-on:click="searchReady"
           :disabled="isDisabled ? false : true"
@@ -85,8 +72,7 @@ export default {
       (v) => !!v || "Account ID, Asset ID, or NFD is required",
       (v) => (v.length === 58 || v.length >= 6 || NFDService.isNFDFormat(v)) || "Must be an account ID, asset ID, or NFD (e.g., algo.algo)",
     ],
-    networks: EndpointDomains.apiNetworks,
-    selectedNetwork: EndpointDomains.defaultNetwork,
+    selectedNetwork: EndpointDomains.defaultNetwork, // Always use MainNet
     accountIDHistory: [],
     exampleDeepLinks: [ {
                           accountID: "37VPAD3CK7CDHRE4U3J75IE4HLFN5ZWVKJ52YFNBX753NNDN6PUP2N7YKI",
@@ -139,7 +125,7 @@ export default {
     },
     notify(resolvedAccountID = null) {
       const accountToUse = resolvedAccountID || this.accountID;
-      this.$emit('searchReady', {accountID: accountToUse, network: this.selectedNetwork});
+      this.$emit('searchReady', {accountID: accountToUse, network: EndpointDomains.defaultNetwork});
     },
     calculateColumnsForSearchButton() {
       if(accountIDHistory.length > 1) {
@@ -168,14 +154,7 @@ export default {
     }
   },
   mounted: function() {
-    const networkParam = this.$route.query.network;
-    if(!!networkParam) {
-      const network = EndpointDomains.getNetworkForKey(networkParam)
-      if(!!network) {
-        this.selectedNetwork = network;
-      }
-    }
-
+    // Always use MainNet - no network parameter handling needed
     const accountIDParam = this.$route.query.accountid;
     if(!!accountIDParam && accountIDParam.length === 58) {
       this.accountID = accountIDParam;
