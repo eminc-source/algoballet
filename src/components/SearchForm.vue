@@ -89,7 +89,7 @@ export default {
     selectedNetwork: EndpointDomains.defaultNetwork,
     accountIDHistory: [],
     exampleDeepLinks: [ {
-                          walletID: "37VPAD3CK7CDHRE4U3J75IE4HLFN5ZWVKJ52YFNBX753NNDN6PUP2N7YKI",
+                          accountID: "37VPAD3CK7CDHRE4U3J75IE4HLFN5ZWVKJ52YFNBX753NNDN6PUP2N7YKI",
                           url: "/algorand-ballet/?deeplink=true&network=main&accountid=37VPAD3CK7CDHRE4U3J75IE4HLFN5ZWVKJ52YFNBX753NNDN6PUP2N7YKI&focus=graph&layout=concentric"
                         }
                         ],

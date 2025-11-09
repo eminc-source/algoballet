@@ -20,150 +20,17 @@
     </div>
 
     <v-spacer></v-spacer>
-
-    <!-- Wallet Connection Section -->
-    <div class="d-flex align-center">
-      <!-- Not Connected State -->
-      <div v-if="!isConnected && !isConnecting">
-        <v-btn
-          @click="connectWallet"
-          color="primary"
-          outlined
-          class="mr-2"
-        >
-          <v-icon left>mdi-wallet</v-icon>
-          Connect Wallet
-        </v-btn>
-      </div>
-
-      <!-- Connecting State -->
-      <div v-if="isConnecting">
-        <v-btn
-          color="primary"
-          outlined
-          disabled
-          class="mr-2"
-        >
-          <v-progress-circular
-            indeterminate
-            size="20"
-            width="2"
-            class="mr-2"
-          ></v-progress-circular>
-          Connecting...
-        </v-btn>
-      </div>
-
-      <!-- Connected State -->
-      <div v-if="isConnected && !isConnecting" class="d-flex align-center">
-        <v-chip
-          color="success"
-          outlined
-          class="mr-2"
-        >
-          <v-icon left small>mdi-check-circle</v-icon>
-          {{ truncatedAddress }}
-        </v-chip>
-        
-        <v-menu offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              icon
-              small
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
-          
-          <v-list>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>Balance</v-list-item-title>
-                <v-list-item-subtitle>{{ walletBalance.toFixed(4) }} ALGO</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>Assets</v-list-item-title>
-                <v-list-item-subtitle>{{ walletAssets.length }} tokens</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            
-            <v-divider></v-divider>
-            
-            <v-list-item @click="disconnectWallet">
-              <v-list-item-icon>
-                <v-icon color="error">mdi-logout</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Disconnect</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </div>
   </v-app-bar>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import walletService from '../services/WalletService';
-
 export default {
   name: 'AppHeader',
-  
-  computed: {
-    ...mapGetters('wallet', [
-      'isConnected',
-      'isConnecting',
-      'walletAddress',
-      'walletBalance',
-      'walletAssets'
-    ]),
-    
-    truncatedAddress() {
-      if (!this.walletAddress) return '';
-      return `${this.walletAddress.slice(0, 6)}...${this.walletAddress.slice(-4)}`;
-    }
-  },
-  
-  data() {
-    return {
-      isConnecting: false
-    };
-  },
-
-  async mounted() {
-    // Initialize wallet service
-    await walletService.initialize();
-  },
   
   methods: {
     goHome() {
       if (this.$route.path !== '/') {
         this.$router.push('/');
-      }
-    },
-    
-    async connectWallet() {
-      this.isConnecting = true;
-      try {
-        await walletService.connectWallet();
-      } catch (error) {
-        console.error('Failed to connect wallet:', error);
-        // You could show a toast/snackbar here
-      } finally {
-        this.isConnecting = false;
-      }
-    },
-    
-    async disconnectWallet() {
-      try {
-        await walletService.disconnect();
-      } catch (error) {
-        console.error('Failed to disconnect wallet:', error);
       }
     }
   }
